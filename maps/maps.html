@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maps - UBC Study Spot Finder</title>
+    <link rel="stylesheet" href="maps.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="../home/Home.html"><button>Home</button></a>
+            <a href="../maps/Maps.html"><button class="active">Maps</button></a>
+            <a href="../profile/profile.html"><button>Profile</button></a>
+        </div>
+    </nav>
+
+    <!-- Maps Container -->
+    <div class="maps-container">
+        <!-- Left Side: Filters -->
+        <div class="filters-section">
+            <h2>Filters</h2>
+            
+            <div class="filter-group">
+                <label>Noise Level</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="filter-checkbox" data-filter="noise" value="quiet" checked>
+                        <span>🔇 Quiet</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="filter-checkbox" data-filter="noise" value="smalltalk" checked>
+                        <span>💬 Small Talk</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="filter-checkbox" data-filter="noise" value="chatting" checked>
+                        <span>🗣️ Chatting</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Amenities</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="filter-checkbox" data-filter="amenity" value="chargers">
+                        <span>🔌 Chargers Available</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="filter-checkbox" data-filter="amenity" value="windows">
+                        <span>🪟 Natural Light</span>
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" class="filter-checkbox" data-filter="amenity" value="food">
+                        <span>☕ Food Nearby</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="filter-group">
+                <label>Minimum Rating</label>
+                <select id="ratingFilter" class="filter-select">
+                    <option value="0">Any Rating</option>
+                    <option value="4">4+ Stars</option>
+                    <option value="4.5">4.5+ Stars</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Seats Available</label>
+                <select id="seatsFilter" class="filter-select">
+                    <option value="any">Any</option>
+                    <option value="low">Few (1-10)</option>
+                    <option value="medium">Some (11-25)</option>
+                    <option value="high">Many (25+)</option>
+                </select>
+            </div>
+
+            <button class="reset-btn" id="resetFilters">Reset Filters</button>
+        </div>
+
+        <!-- Right Side: Map and Info -->
+        <div class="map-section">
+            <div class="map-container">
+                <svg id="campusMap" viewBox="0 0 800 600">
+                    <!-- Simple campus representation -->
+                    <rect x="0" y="0" width="800" height="600" fill="#e8f5e9"/>
+                    
+                    <!-- Roads -->
+                    <rect x="0" y="290" width="800" height="20" fill="#ccc"/>
+                    <rect x="390" y="0" width="20" height="600" fill="#ccc"/>
+                    
+                    <!-- Study Spot Pins -->
+                    <g class="pin" data-building="koerner" data-noise="quiet" data-rating="4.8" data-seats="high" data-chargers="true" data-windows="true">
+                        <circle cx="200" cy="150" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
+                        <text x="200" y="157" text-anchor="middle" fill="white" font-size="20">📚</text>
+                    </g>
+                    
+                    <g class="pin" data-building="ikb" data-noise="smalltalk" data-rating="4.6" data-seats="high" data-chargers="true" data-windows="true" data-food="true">
+                        <circle cx="500" cy="200" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
+                        <text x="500" y="207" text-anchor="middle" fill="white" font-size="20">💻</text>
+                    </g>
+                    
+                    <g class="pin" data-building="nest" data-noise="chatting" data-rating="4.5" data-seats="medium" data-chargers="true" data-food="true">
+                        <circle cx="600" cy="350" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
+                        <text x="600" y="357" text-anchor="middle" fill="white" font-size="20">☕</text>
+                    </g>
+                    
+                    <g class="pin" data-building="lsc" data-noise="quiet" data-rating="4.7" data-seats="medium" data-chargers="true">
+                        <circle cx="300" cy="400" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
+                        <text x="300" y="407" text-anchor="middle" fill="white" font-size="20">🔬</text>
+                    </g>
+                    
+                    <g class="pin" data-building="buchanan" data-noise="quiet" data-rating="4.4" data-seats="low" data-chargers="false">
+                        <circle cx="450" cy="450" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
+                        <text x="450" y="457" text-anchor="middle" fill="white" font-size="20">📖</text>
+                    </g>
+                    
+                    <g class="pin" data-building="woodward" data-noise="smalltalk" data-rating="4.3" data-seats="medium" data-chargers="true" data-windows="true">
+                        <circle cx="250" cy="250" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
+                        <text x="250" y="257" text-anchor="middle" fill="white" font-size="20">🏛️</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="info-panel" id="infoPanel">
+                <div class="info-placeholder">
+                    <p>Click on a pin to view study spot details</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Modal -->
+    <div class="modal" id="reviewModal">
+        <div class="modal-content">
+            <h2>Add Review</h2>
+            <p class="modal-subtitle" id="reviewBuilding"></p>
+            
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label>Your Rating</label>
+                    <div class="star-rating" id="starRating">
+                        <span class="star" data-rating="1">☆</span>
+                        <span class="star" data-rating="2">☆</span>
+                        <span class="star" data-rating="3">☆</span>
+                        <span class="star" data-rating="4">☆</span>
+                        <span class="star" data-rating="5">☆</span>
+                    </div>
+                    <input type="hidden" id="ratingValue" value="0">
+                </div>
+
+                <div class="form-group">
+                    <label>Noise Level</label>
+                    <select id="noiseLevel" required>
+                        <option value="">Select noise level</option>
+                        <option value="quiet">🔇 Quiet</option>
+                        <option value="smalltalk">💬 Small Talk</option>
+                        <option value="chatting">🗣️ Chatting</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Estimated Seats Available</label>
+                    <input type="number" id="seatsAvailable" min="0" max="100" placeholder="e.g., 15" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Your Review</label>
+                    <textarea id="reviewText" rows="4" placeholder="Share your experience at this study spot..." required></textarea>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="modal-btn cancel-btn" id="cancelReview">Cancel</button>
+                    <button type="submit" class="modal-btn submit-btn">Submit Review</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="maps.js"></script>
+</body>
+</html>

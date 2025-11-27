@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - UBC Study Spot Finder</title>
+    <link rel="stylesheet" href="profile.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="../home/Home.html"><button>Home</button></a>
+            <a href="../maps/Maps.html"><button>Maps</button></a>
+            <a href="../profile/profile.html"><button class="active">Profile</button></a>
+        </div>
+    </nav>
+
+    <!-- Profile Container -->
+    <div class="profile-container">
+        <!-- Left Section -->
+        <div class="left-section">
+            <!-- Profile Picture -->
+            <div class="profile-picture-wrapper">
+                <div class="profile-picture" id="profilePicture">
+                    <img id="profileImg" src="" alt="Profile Picture" style="display: none;">
+                    <div class="upload-overlay" id="uploadOverlay">
+                        <span>📷</span>
+                        <p>Upload Photo</p>
+                    </div>
+                </div>
+                <input type="file" id="fileInput" accept="image/*" style="display: none;">
+            </div>
+
+            <!-- User Info -->
+            <div class="info-field">
+                <span class="label">Year:</span>
+                <span class="value" id="yearDisplay">2</span>
+                <input type="number" class="edit-input" id="yearInput" min="1" max="7" value="2" style="display: none;">
+            </div>
+
+            <div class="info-field">
+                <span class="label">Major:</span>
+                <span class="value" id="majorDisplay">Computer Science</span>
+                <input type="text" class="edit-input" id="majorInput" value="Computer Science" style="display: none;">
+            </div>
+
+            <div class="info-field">
+                <span class="label">Faculty:</span>
+                <span class="value" id="facultyDisplay">Science</span>
+                <select class="edit-input" id="facultyInput" style="display: none;">
+                    <option value="Science">Science</option>
+                    <option value="Arts">Arts</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Commerce">Commerce</option>
+                    <option value="Land and Food Systems">Land and Food Systems</option>
+                    <option value="Forestry">Forestry</option>
+                    <option value="Kinesiology">Kinesiology</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Right Section -->
+        <div class="right-section">
+            <!-- Header -->
+            <div class="profile-header">
+                <div class="name-section">
+                    <h1 id="nameDisplay">Student Name</h1>
+                    <input type="text" class="edit-input name-input" id="nameInput" value="Student Name" style="display: none;">
+                    <p id="emailDisplay">student@student.ubc.ca</p>
+                </div>
+                <button class="edit-btn" id="editBtn">Edit</button>
+            </div>
+
+            <!-- Study Preferences Section -->
+            <div class="preferences-section">
+                <h3>Study Preferences</h3>
+                
+                <div class="preference-item">
+                    <span class="label">Preferred Noise Level:</span>
+                    <span class="value" id="noiseDisplay">Quiet</span>
+                    <select class="edit-input" id="noiseInput" style="display: none;">
+                        <option value="Quiet">🔇 Quiet</option>
+                        <option value="Small Talk">💬 Small Talk</option>
+                        <option value="Chatting">🗣️ Chatting</option>
+                    </select>
+                </div>
+
+                <div class="preference-item">
+                    <span class="label">Study Time Preference:</span>
+                    <span class="value" id="timeDisplay">Morning (8am-12pm)</span>
+                    <select class="edit-input" id="timeInput" style="display: none;">
+                        <option value="Morning (8am-12pm)">Morning (8am-12pm)</option>
+                        <option value="Afternoon (12pm-5pm)">Afternoon (12pm-5pm)</option>
+                        <option value="Evening (5pm-10pm)">Evening (5pm-10pm)</option>
+                        <option value="Late Night (10pm+)">Late Night (10pm+)</option>
+                    </select>
+                </div>
+
+                <div class="preference-item">
+                    <span class="label">Needs Chargers:</span>
+                    <span class="value" id="chargersDisplay">Yes</span>
+                    <select class="edit-input" id="chargersInput" style="display: none;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+
+                <div class="preference-item">
+                    <span class="label">Prefers Natural Light:</span>
+                    <span class="value" id="lightDisplay">Yes</span>
+                    <select class="edit-input" id="lightInput" style="display: none;">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Favorite Spots -->
+            <div class="favorites-section">
+                <h3>Favorite Study Spots</h3>
+                <div class="favorites-list" id="favoritesList">
+                    <div class="favorite-item">
+                        <span class="spot-icon">📚</span>
+                        <span class="spot-name">Koerner Library</span>
+                        <span class="spot-rating">⭐ 4.8</span>
+                    </div>
+                    <div class="favorite-item">
+                        <span class="spot-icon">💻</span>
+                        <span class="spot-name">Irving K Barber</span>
+                        <span class="spot-rating">⭐ 4.6</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- My Reviews -->
+            <div class="reviews-section">
+                <h3>My Recent Reviews</h3>
+                <div class="review-item">
+                    <div class="review-header">
+                        <strong>Koerner Library</strong>
+                        <span>⭐⭐⭐⭐⭐</span>
+                    </div>
+                    <p>Perfect quiet study space! Great for focusing during finals.</p>
+                    <span class="review-date">2 days ago</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons" id="actionButtons" style="display: none;">
+                <button class="cancel-btn" id="cancelBtn">Cancel</button>
+                <button class="save-btn" id="saveBtn">Save Changes</button>
+            </div>
+
+            <!-- Logout Button -->
+            <button class="logout-btn" id="logoutBtn">Log Out</button>
+        </div>
+    </div>
+
+    <script src="profile.js"></script>
+</body>
+</html>
