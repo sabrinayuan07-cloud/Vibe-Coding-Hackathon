@@ -4,7 +4,396 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile - UBC Study Spot Finder</title>
-    <link rel="stylesheet" href="profile.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f0ff 0%, #e8dcff 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(155, 125, 212, 0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .nav-container button {
+            padding: 12px 30px;
+            border: none;
+            background: transparent;
+            color: #6b5b7d;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-container button:hover {
+            background: #f5f0ff;
+            color: #9b7dd4;
+        }
+
+        .nav-container button.active {
+            background: linear-gradient(135deg, #9b7dd4 0%, #7c5fc2 100%);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(155, 125, 212, 0.3);
+        }
+
+        .nav-container a {
+            text-decoration: none;
+        }
+
+        /* Profile Container */
+        .profile-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        /* Left Section */
+        .left-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(155, 125, 212, 0.1);
+            height: fit-content;
+        }
+
+        .profile-picture-wrapper {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-picture {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9b7dd4 0%, #7c5fc2 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-picture img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .profile-picture:hover .upload-overlay {
+            opacity: 1;
+        }
+
+        .upload-overlay span {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .upload-overlay p {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .info-field {
+            margin-bottom: 20px;
+        }
+
+        .label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #6b5b7d;
+            margin-bottom: 8px;
+        }
+
+        .value {
+            display: block;
+            font-size: 16px;
+            color: #2d1b4e;
+            padding: 10px;
+            background: #f5f0ff;
+            border-radius: 8px;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #9b7dd4;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            background: white;
+        }
+
+        .edit-input:focus {
+            outline: none;
+            border-color: #7c5fc2;
+        }
+
+        /* Right Section */
+        .right-section {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 15px rgba(155, 125, 212, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #f5f0ff;
+        }
+
+        .name-section h1 {
+            font-size: 32px;
+            color: #2d1b4e;
+            margin-bottom: 8px;
+        }
+
+        .name-input {
+            font-size: 32px !important;
+            font-weight: 600;
+            padding: 8px 12px !important;
+        }
+
+        .name-section p {
+            font-size: 16px;
+            color: #6b5b7d;
+        }
+
+        .edit-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #9b7dd4 0%, #7c5fc2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .edit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        .preferences-section,
+        .favorites-section,
+        .reviews-section {
+            margin-bottom: 40px;
+        }
+
+        h3 {
+            font-size: 22px;
+            color: #2d1b4e;
+            margin-bottom: 20px;
+        }
+
+        .preference-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f5f0ff;
+            border-radius: 10px;
+        }
+
+        .preference-item .label {
+            font-size: 15px;
+            color: #2d1b4e;
+        }
+
+        .preference-item .value {
+            font-size: 15px;
+            color: #6b5b7d;
+            font-weight: 600;
+            background: transparent;
+            padding: 0;
+        }
+
+        .preference-item .edit-input {
+            width: auto;
+            min-width: 200px;
+        }
+
+        /* Favorites */
+        .favorites-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .favorite-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: #f5f0ff;
+            border-radius: 10px;
+        }
+
+        .spot-icon {
+            font-size: 24px;
+        }
+
+        .spot-name {
+            flex: 1;
+            font-size: 16px;
+            color: #2d1b4e;
+            font-weight: 600;
+        }
+
+        .spot-rating {
+            font-size: 14px;
+            color: #6b5b7d;
+        }
+
+        /* Reviews */
+        .review-item {
+            background: #f5f0ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .review-header strong {
+            color: #2d1b4e;
+            font-size: 16px;
+        }
+
+        .review-item p {
+            color: #6b5b7d;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .review-date {
+            font-size: 13px;
+            color: #9b7dd4;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .cancel-btn,
+        .save-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cancel-btn {
+            background: #f5f0ff;
+            color: #9b7dd4;
+        }
+
+        .cancel-btn:hover {
+            background: #e8dcff;
+        }
+
+        .save-btn {
+            background: linear-gradient(135deg, #9b7dd4 0%, #7c5fc2 100%);
+            color: white;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            color: #d32f2f;
+            border: 2px solid #d32f2f;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: #d32f2f;
+            color: white;
+        }
+
+        @media (max-width: 968px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -69,7 +458,7 @@
                     <input type="text" class="edit-input name-input" id="nameInput" value="Student Name" style="display: none;">
                     <p id="emailDisplay">student@student.ubc.ca</p>
                 </div>
-                <button class="edit-btn" id="editBtn">Edit</button>
+                <button class="edit-btn" id="editBtn">Edit Profile</button>
             </div>
 
             <!-- Study Preferences Section -->
@@ -157,6 +546,206 @@
         </div>
     </div>
 
-    <script src="profile.js"></script>
+    <script>
+        let isEditing = false;
+        let originalData = {};
+
+        // Load saved data on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            loadProfileData();
+        });
+
+        // Profile picture upload
+        document.getElementById('profilePicture').addEventListener('click', () => {
+            document.getElementById('fileInput').click();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = document.getElementById('profileImg');
+                    img.src = event.target.result;
+                    img.style.display = 'block';
+                    
+                    // Save to memory (in a real app, you'd upload to a server)
+                    // For demo purposes, we'll just keep it in the current session
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Edit button
+        document.getElementById('editBtn').addEventListener('click', () => {
+            if (!isEditing) {
+                enterEditMode();
+            }
+        });
+
+        // Cancel button
+        document.getElementById('cancelBtn').addEventListener('click', () => {
+            exitEditMode(false);
+        });
+
+        // Save button
+        document.getElementById('saveBtn').addEventListener('click', () => {
+            saveChanges();
+            exitEditMode(true);
+        });
+
+        // Logout button
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            if (confirm('Are you sure you want to log out?')) {
+                // Clear login status
+                const rememberedData = {
+                    name: document.getElementById('nameDisplay').textContent,
+                    email: document.getElementById('emailDisplay').textContent,
+                    year: document.getElementById('yearDisplay').textContent,
+                    major: document.getElementById('majorDisplay').textContent,
+                    faculty: document.getElementById('facultyDisplay').textContent,
+                    noise: document.getElementById('noiseDisplay').textContent,
+                    time: document.getElementById('timeDisplay').textContent,
+                    chargers: document.getElementById('chargersDisplay').textContent,
+                    light: document.getElementById('lightDisplay').textContent
+                };
+                
+                // Redirect to login page
+                window.location.href = '../index.html';
+            }
+        });
+
+        function enterEditMode() {
+            isEditing = true;
+            
+            // Save original data
+            originalData = {
+                name: document.getElementById('nameDisplay').textContent,
+                year: document.getElementById('yearDisplay').textContent,
+                major: document.getElementById('majorDisplay').textContent,
+                faculty: document.getElementById('facultyDisplay').textContent,
+                noise: document.getElementById('noiseDisplay').textContent,
+                time: document.getElementById('timeDisplay').textContent,
+                chargers: document.getElementById('chargersDisplay').textContent,
+                light: document.getElementById('lightDisplay').textContent
+            };
+
+            // Hide displays, show inputs
+            document.getElementById('nameDisplay').style.display = 'none';
+            document.getElementById('nameInput').style.display = 'block';
+            document.getElementById('nameInput').value = originalData.name;
+
+            document.getElementById('yearDisplay').style.display = 'none';
+            document.getElementById('yearInput').style.display = 'block';
+            document.getElementById('yearInput').value = originalData.year;
+
+            document.getElementById('majorDisplay').style.display = 'none';
+            document.getElementById('majorInput').style.display = 'block';
+            document.getElementById('majorInput').value = originalData.major;
+
+            document.getElementById('facultyDisplay').style.display = 'none';
+            document.getElementById('facultyInput').style.display = 'block';
+            document.getElementById('facultyInput').value = originalData.faculty;
+
+            document.getElementById('noiseDisplay').style.display = 'none';
+            document.getElementById('noiseInput').style.display = 'block';
+            document.getElementById('noiseInput').value = originalData.noise;
+
+            document.getElementById('timeDisplay').style.display = 'none';
+            document.getElementById('timeInput').style.display = 'block';
+            document.getElementById('timeInput').value = originalData.time;
+
+            document.getElementById('chargersDisplay').style.display = 'none';
+            document.getElementById('chargersInput').style.display = 'block';
+            document.getElementById('chargersInput').value = originalData.chargers;
+
+            document.getElementById('lightDisplay').style.display = 'none';
+            document.getElementById('lightInput').style.display = 'block';
+            document.getElementById('lightInput').value = originalData.light;
+
+            // Show action buttons, hide edit button
+            document.getElementById('actionButtons').style.display = 'flex';
+            document.getElementById('editBtn').style.display = 'none';
+        }
+
+        function exitEditMode(saved) {
+            isEditing = false;
+
+            if (!saved) {
+                // Restore original values
+                document.getElementById('nameInput').value = originalData.name;
+                document.getElementById('yearInput').value = originalData.year;
+                document.getElementById('majorInput').value = originalData.major;
+                document.getElementById('facultyInput').value = originalData.faculty;
+                document.getElementById('noiseInput').value = originalData.noise;
+                document.getElementById('timeInput').value = originalData.time;
+                document.getElementById('chargersInput').value = originalData.chargers;
+                document.getElementById('lightInput').value = originalData.light;
+            }
+
+            // Show displays, hide inputs
+            document.getElementById('nameDisplay').style.display = 'block';
+            document.getElementById('nameInput').style.display = 'none';
+
+            document.getElementById('yearDisplay').style.display = 'block';
+            document.getElementById('yearInput').style.display = 'none';
+
+            document.getElementById('majorDisplay').style.display = 'block';
+            document.getElementById('majorInput').style.display = 'none';
+
+            document.getElementById('facultyDisplay').style.display = 'block';
+            document.getElementById('facultyInput').style.display = 'none';
+
+            document.getElementById('noiseDisplay').style.display = 'block';
+            document.getElementById('noiseInput').style.display = 'none';
+
+            document.getElementById('timeDisplay').style.display = 'block';
+            document.getElementById('timeInput').style.display = 'none';
+
+            document.getElementById('chargersDisplay').style.display = 'block';
+            document.getElementById('chargersInput').style.display = 'none';
+
+            document.getElementById('lightDisplay').style.display = 'block';
+            document.getElementById('lightInput').style.display = 'none';
+
+            // Hide action buttons, show edit button
+            document.getElementById('actionButtons').style.display = 'none';
+            document.getElementById('editBtn').style.display = 'block';
+        }
+
+        function saveChanges() {
+            // Get all values from inputs
+            const name = document.getElementById('nameInput').value;
+            const year = document.getElementById('yearInput').value;
+            const major = document.getElementById('majorInput').value;
+            const faculty = document.getElementById('facultyInput').value;
+            const noise = document.getElementById('noiseInput').value;
+            const time = document.getElementById('timeInput').value;
+            const chargers = document.getElementById('chargersInput').value;
+            const light = document.getElementById('lightInput').value;
+
+            // Update displays
+            document.getElementById('nameDisplay').textContent = name;
+            document.getElementById('yearDisplay').textContent = year;
+            document.getElementById('majorDisplay').textContent = major;
+            document.getElementById('facultyDisplay').textContent = faculty;
+            document.getElementById('noiseDisplay').textContent = noise;
+            document.getElementById('timeDisplay').textContent = time;
+            document.getElementById('chargersDisplay').textContent = chargers;
+            document.getElementById('lightDisplay').textContent = light;
+
+            // Show success message
+            alert('Profile updated successfully!');
+        }
+
+        function loadProfileData() {
+            // In a real app, you'd load this from a database
+            // For now, we'll use the default values already in the HTML
+            const email = localStorage.getItem('userEmail');
+            if (email) {
+                document.getElementById('emailDisplay').textContent = email;
+            }
+        }
+    </script>
 </body>
 </html>

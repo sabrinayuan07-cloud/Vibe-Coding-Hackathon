@@ -4,7 +4,328 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maps - UBC Study Spot Finder</title>
-    <link rel="stylesheet" href="maps.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f0ff 0%, #e8dcff 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        nav {
+            background: white;
+            box-shadow: 0 2px 10px rgba(155, 125, 212, 0.1);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        .nav-container button {
+            padding: 12px 30px;
+            border: none;
+            background: transparent;
+            color: #6b5b7d;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .nav-container button:hover {
+            background: #f5f0ff;
+            color: #9b7dd4;
+        }
+
+        .nav-container button.active {
+            background: linear-gradient(135deg, #9b7dd4 0%, #7c5fc2 100%);
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(155, 125, 212, 0.3);
+        }
+
+        .nav-container a {
+            text-decoration: none;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 20px;
+            height: calc(100vh - 120px);
+        }
+
+        /* Map Section */
+        .map-container {
+            flex: 2;
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(155, 125, 212, 0.1);
+        }
+
+        .map-container h2 {
+            font-size: 24px;
+            color: #2d1b4e;
+            margin-bottom: 15px;
+        }
+
+        #map {
+            width: 100%;
+            height: calc(100% - 50px);
+            border-radius: 12px;
+            background: #e8f5e9;
+        }
+
+        /* Details Section */
+        .details-container {
+            flex: 1;
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(155, 125, 212, 0.1);
+            overflow-y: auto;
+            max-height: calc(100vh - 140px);
+        }
+
+        #placeholder {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b5b7d;
+        }
+
+        #placeholder p {
+            font-size: 16px;
+            margin-top: 20px;
+        }
+
+        #details {
+            display: none;
+        }
+
+        #spot-name {
+            font-size: 26px;
+            color: #2d1b4e;
+            margin-bottom: 15px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            background: #f5f0ff;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .info-label {
+            display: block;
+            font-size: 14px;
+            color: #6b5b7d;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 18px;
+            color: #2d1b4e;
+            font-weight: 600;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-section .info-item {
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Reviews */
+        .reviews {
+            margin-top: 25px;
+        }
+
+        .reviews h3 {
+            font-size: 20px;
+            color: #2d1b4e;
+            margin-bottom: 15px;
+        }
+
+        #reviews-list {
+            margin-bottom: 20px;
+        }
+
+        .review {
+            background: #f5f0ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .review-user {
+            font-weight: 600;
+            color: #2d1b4e;
+        }
+
+        .review-rating {
+            color: #ffd700;
+        }
+
+        .review-comment {
+            color: #6b5b7d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* Buttons */
+        #add-review-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #9b7dd4 0%, #7c5fc2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-bottom: 15px;
+        }
+
+        #add-review-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Review Form */
+        #review-form {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d1b4e;
+            margin-bottom: 8px;
+        }
+
+        #review-comment {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e8dcff;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        #review-comment:focus {
+            outline: none;
+            border-color: #9b7dd4;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 10px;
+            font-size: 32px;
+            cursor: pointer;
+        }
+
+        .star {
+            color: #e8dcff;
+            transition: color 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: #ffd700;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .form-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        #cancel-review {
+            background: #f5f0ff;
+            color: #9b7dd4;
+        }
+
+        #cancel-review:hover {
+            background: #e8dcff;
+        }
+
+        #submit-review {
+            background: linear-gradient(135deg, #9b7dd4 0%, #7c5fc2 100%);
+            color: white;
+        }
+
+        #submit-review:hover {
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 968px) {
+            .container {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -16,170 +337,517 @@
         </div>
     </nav>
 
-    <!-- Maps Container -->
-    <div class="maps-container">
-        <!-- Left Side: Filters -->
-        <div class="filters-section">
-            <h2>Filters</h2>
-            
-            <div class="filter-group">
-                <label>Noise Level</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" class="filter-checkbox" data-filter="noise" value="quiet" checked>
-                        <span>🔇 Quiet</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" class="filter-checkbox" data-filter="noise" value="smalltalk" checked>
-                        <span>💬 Small Talk</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" class="filter-checkbox" data-filter="noise" value="chatting" checked>
-                        <span>🗣️ Chatting</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="filter-group">
-                <label>Amenities</label>
-                <div class="checkbox-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" class="filter-checkbox" data-filter="amenity" value="chargers">
-                        <span>🔌 Chargers Available</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" class="filter-checkbox" data-filter="amenity" value="windows">
-                        <span>🪟 Natural Light</span>
-                    </label>
-                    <label class="checkbox-label">
-                        <input type="checkbox" class="filter-checkbox" data-filter="amenity" value="food">
-                        <span>☕ Food Nearby</span>
-                    </label>
-                </div>
-            </div>
-
-            <div class="filter-group">
-                <label>Minimum Rating</label>
-                <select id="ratingFilter" class="filter-select">
-                    <option value="0">Any Rating</option>
-                    <option value="4">4+ Stars</option>
-                    <option value="4.5">4.5+ Stars</option>
-                </select>
-            </div>
-
-            <div class="filter-group">
-                <label>Seats Available</label>
-                <select id="seatsFilter" class="filter-select">
-                    <option value="any">Any</option>
-                    <option value="low">Few (1-10)</option>
-                    <option value="medium">Some (11-25)</option>
-                    <option value="high">Many (25+)</option>
-                </select>
-            </div>
-
-            <button class="reset-btn" id="resetFilters">Reset Filters</button>
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Map Section -->
+        <div class="map-container">
+            <h2>🗺️ Campus Map</h2>
+            <div id="map"></div>
         </div>
 
-        <!-- Right Side: Map and Info -->
-        <div class="map-section">
-            <div class="map-container">
-                <svg id="campusMap" viewBox="0 0 800 600">
-                    <!-- Simple campus representation -->
-                    <rect x="0" y="0" width="800" height="600" fill="#e8f5e9"/>
-                    
-                    <!-- Roads -->
-                    <rect x="0" y="290" width="800" height="20" fill="#ccc"/>
-                    <rect x="390" y="0" width="20" height="600" fill="#ccc"/>
-                    
-                    <!-- Study Spot Pins -->
-                    <g class="pin" data-building="koerner" data-noise="quiet" data-rating="4.8" data-seats="high" data-chargers="true" data-windows="true">
-                        <circle cx="200" cy="150" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
-                        <text x="200" y="157" text-anchor="middle" fill="white" font-size="20">📚</text>
-                    </g>
-                    
-                    <g class="pin" data-building="ikb" data-noise="smalltalk" data-rating="4.6" data-seats="high" data-chargers="true" data-windows="true" data-food="true">
-                        <circle cx="500" cy="200" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
-                        <text x="500" y="207" text-anchor="middle" fill="white" font-size="20">💻</text>
-                    </g>
-                    
-                    <g class="pin" data-building="nest" data-noise="chatting" data-rating="4.5" data-seats="medium" data-chargers="true" data-food="true">
-                        <circle cx="600" cy="350" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
-                        <text x="600" y="357" text-anchor="middle" fill="white" font-size="20">☕</text>
-                    </g>
-                    
-                    <g class="pin" data-building="lsc" data-noise="quiet" data-rating="4.7" data-seats="medium" data-chargers="true">
-                        <circle cx="300" cy="400" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
-                        <text x="300" y="407" text-anchor="middle" fill="white" font-size="20">🔬</text>
-                    </g>
-                    
-                    <g class="pin" data-building="buchanan" data-noise="quiet" data-rating="4.4" data-seats="low" data-chargers="false">
-                        <circle cx="450" cy="450" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
-                        <text x="450" y="457" text-anchor="middle" fill="white" font-size="20">📖</text>
-                    </g>
-                    
-                    <g class="pin" data-building="woodward" data-noise="smalltalk" data-rating="4.3" data-seats="medium" data-chargers="true" data-windows="true">
-                        <circle cx="250" cy="250" r="20" fill="#9b7dd4" stroke="white" stroke-width="3"/>
-                        <text x="250" y="257" text-anchor="middle" fill="white" font-size="20">🏛️</text>
-                    </g>
-                </svg>
+        <!-- Details Section -->
+        <div class="details-container">
+            <!-- Placeholder -->
+            <div id="placeholder">
+                <div style="font-size: 48px;">📍</div>
+                <p>Click on a marker to view study spot details</p>
             </div>
 
-            <!-- Info Panel -->
-            <div class="info-panel" id="infoPanel">
-                <div class="info-placeholder">
-                    <p>Click on a pin to view study spot details</p>
-                </div>
-            </div>
-        </div>
-    </div>
+            <!-- Details Content -->
+            <div id="details">
+                <h2 id="spot-name"></h2>
 
-    <!-- Review Modal -->
-    <div class="modal" id="reviewModal">
-        <div class="modal-content">
-            <h2>Add Review</h2>
-            <p class="modal-subtitle" id="reviewBuilding"></p>
-            
-            <form id="reviewForm">
-                <div class="form-group">
-                    <label>Your Rating</label>
-                    <div class="star-rating" id="starRating">
-                        <span class="star" data-rating="1">☆</span>
-                        <span class="star" data-rating="2">☆</span>
-                        <span class="star" data-rating="3">☆</span>
-                        <span class="star" data-rating="4">☆</span>
-                        <span class="star" data-rating="5">☆</span>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">⭐ Rating</span>
+                        <span class="info-value" id="spot-rating"></span>
                     </div>
-                    <input type="hidden" id="ratingValue" value="0">
+                    <div class="info-item">
+                        <span class="info-label">💺 Seats</span>
+                        <span class="info-value" id="spot-seats"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🔊 Noise Level</span>
+                        <span class="info-value" id="spot-noise"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label"><span id="spot-outlet-icon"></span> Outlets</span>
+                        <span class="info-value" id="spot-outlets"></span>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Noise Level</label>
-                    <select id="noiseLevel" required>
-                        <option value="">Select noise level</option>
-                        <option value="quiet">🔇 Quiet</option>
-                        <option value="smalltalk">💬 Small Talk</option>
-                        <option value="chatting">🗣️ Chatting</option>
-                    </select>
+                <div class="info-section">
+                    <div class="info-item">
+                        <span class="info-label">📍 Location:</span>
+                        <span id="spot-location"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">🕒 Hours:</span>
+                        <span id="spot-hours"></span>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Estimated Seats Available</label>
-                    <input type="number" id="seatsAvailable" min="0" max="100" placeholder="e.g., 15" required>
+                <!-- Reviews -->
+                <div class="reviews">
+                    <h3>Reviews (<span id="review-count">0</span>)</h3>
+                    <div id="reviews-list"></div>
+                    <button id="add-review-btn">Write a Review</button>
                 </div>
 
-                <div class="form-group">
-                    <label>Your Review</label>
-                    <textarea id="reviewText" rows="4" placeholder="Share your experience at this study spot..." required></textarea>
+                <!-- Review Form -->
+                <div id="review-form">
+                    <h3>Write a Review</h3>
+                    <div class="form-group">
+                        <label>Rating</label>
+                        <div class="star-rating" id="star-rating">
+                            <span class="star" data-rating="1">★</span>
+                            <span class="star" data-rating="2">★</span>
+                            <span class="star" data-rating="3">★</span>
+                            <span class="star" data-rating="4">★</span>
+                            <span class="star" data-rating="5">★</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Your Review</label>
+                        <textarea id="review-comment" placeholder="Share your experience..."></textarea>
+                    </div>
+                    <div class="form-buttons">
+                        <button id="cancel-review">Cancel</button>
+                        <button id="submit-review">Submit</button>
+                    </div>
                 </div>
-
-                <div class="modal-buttons">
-                    <button type="button" class="modal-btn cancel-btn" id="cancelReview">Cancel</button>
-                    <button type="submit" class="modal-btn submit-btn">Submit Review</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
-    <script src="maps.js"></script>
+    <script>
+        // Study spots data with real UBC coordinates
+        let studySpots = [
+            {
+                id: 1,
+                name: "Irving K. Barber Learning Centre",
+                lat: 49.26759,
+                lng: -123.25393,
+                seats: 800,
+                noise: "Quiet",
+                outlets: true,
+                rating: 4.5,
+                location: "1961 East Mall",
+                hours: "24/7",
+                reviews: [
+                    { user: "Alex", rating: 5, comment: "Great for late night studying! Open 24/7 is a lifesaver during finals." },
+                    { user: "Sarah", rating: 4, comment: "Lots of space but can get crowded during exams." },
+                    { user: "Emma", rating: 5, comment: "The silent study floor is perfect. Lots of natural light too!" }
+                ]
+            },
+            {
+                id: 2,
+                name: "Koerner Library",
+                lat: 49.26784,
+                lng: -123.25434,
+                seats: 300,
+                noise: "Very Quiet",
+                outlets: true,
+                rating: 4.7,
+                location: "1958 Main Mall",
+                hours: "8am - 12am",
+                reviews: [
+                    { user: "Mike", rating: 5, comment: "Perfect silent study environment! Love the study carrels." },
+                    { user: "Lisa", rating: 5, comment: "Best library on campus for serious studying. Very quiet." },
+                    { user: "David", rating: 4, comment: "Great spot but gets full quickly during midterms." }
+                ]
+            },
+            {
+                id: 3,
+                name: "Life Sciences Centre",
+                lat: 49.26381,
+                lng: -123.25209,
+                seats: 150,
+                noise: "Moderate",
+                outlets: true,
+                rating: 4.2,
+                location: "2350 Health Sciences Mall",
+                hours: "7am - 11pm",
+                reviews: [
+                    { user: "Rachel", rating: 4, comment: "Great for STEM students. Whiteboards everywhere!" },
+                    { user: "Tom", rating: 4, comment: "Nice atrium space with good lighting." }
+                ]
+            },
+            {
+                id: 4,
+                name: "AMS Student Nest",
+                lat: 49.26681,
+                lng: -123.24960,
+                seats: 80,
+                noise: "Moderate",
+                outlets: true,
+                rating: 4.6,
+                location: "6331 Crescent Road",
+                hours: "7am - 11pm",
+                reviews: [
+                    { user: "Jordan", rating: 5, comment: "Love the cozy atmosphere! Great for group study." },
+                    { user: "Maya", rating: 4, comment: "Comfortable seating and food options nearby." },
+                    { user: "Chris", rating: 5, comment: "Best spot for casual studying with friends!" }
+                ]
+            },
+            {
+                id: 5,
+                name: "Buchanan Tower",
+                lat: 49.26921,
+                lng: -123.25462,
+                seats: 200,
+                noise: "Quiet",
+                outlets: false,
+                rating: 4.0,
+                location: "1873 East Mall",
+                hours: "8am - 10pm",
+                reviews: [
+                    { user: "Kevin", rating: 4, comment: "Quiet and peaceful. Wish there were more outlets though." },
+                    { user: "Sophie", rating: 4, comment: "Good for reading. Bring your own charger backup!" }
+                ]
+            },
+            {
+                id: 6,
+                name: "Sauder Building",
+                lat: 49.26449,
+                lng: -123.25359,
+                seats: 120,
+                noise: "Moderate",
+                outlets: true,
+                rating: 4.3,
+                location: "2053 Main Mall",
+                hours: "7am - 9pm",
+                reviews: [
+                    { user: "Amanda", rating: 4, comment: "Modern facilities and great for business students." },
+                    { user: "Ryan", rating: 4, comment: "Comfortable chairs and good WiFi!" }
+                ]
+            },
+            {
+                id: 7,
+                name: "Woodward Library (IRC)",
+                lat: 49.26278,
+                lng: -123.25278,
+                seats: 250,
+                noise: "Very Quiet",
+                outlets: true,
+                rating: 4.8,
+                location: "2198 Health Sciences Mall",
+                hours: "8am - 11pm",
+                reviews: [
+                    { user: "Priya", rating: 5, comment: "Absolutely love this library! Perfect for deep focus." },
+                    { user: "Nathan", rating: 5, comment: "Best hidden gem on campus. Never too crowded." },
+                    { user: "Jessica", rating: 4, comment: "Excellent medical library resources." }
+                ]
+            },
+            {
+                id: 8,
+                name: "IKBLC Learning Commons",
+                lat: 49.26759,
+                lng: -123.25393,
+                seats: 400,
+                noise: "Quiet",
+                outlets: true,
+                rating: 4.6,
+                location: "1961 East Mall (Lower Level)",
+                hours: "24/7",
+                reviews: [
+                    { user: "Daniel", rating: 5, comment: "24/7 access is amazing! Great collaborative spaces." },
+                    { user: "Olivia", rating: 4, comment: "Spacious and well-lit. Gets busy during finals." }
+                ]
+            },
+            {
+                id: 9,
+                name: "Walter C. Koerner Library - Asian Studies",
+                lat: 49.26790,
+                lng: -123.25450,
+                seats: 100,
+                noise: "Very Quiet",
+                outlets: true,
+                rating: 4.9,
+                location: "1958 Main Mall, 3rd Floor",
+                hours: "8am - 10pm",
+                reviews: [
+                    { user: "Yuki", rating: 5, comment: "The quietest spot on campus! Perfect for concentration." },
+                    { user: "Marcus", rating: 5, comment: "Beautiful collection and peaceful atmosphere." }
+                ]
+            },
+            {
+                id: 10,
+                name: "Orchard Commons",
+                lat: 49.26050,
+                lng: -123.24850,
+                seats: 150,
+                noise: "Moderate",
+                outlets: true,
+                rating: 4.4,
+                location: "6363 Agronomy Road",
+                hours: "7am - 11pm",
+                reviews: [
+                    { user: "Ethan", rating: 4, comment: "Great if you live in residence! Convenient location." },
+                    { user: "Sophia", rating: 5, comment: "Love studying here between classes. Relaxed vibe." }
+                ]
+            },
+            {
+                id: 11,
+                name: "Mathematics Building",
+                lat: 49.26630,
+                lng: -123.25470,
+                seats: 80,
+                noise: "Quiet",
+                outlets: true,
+                rating: 4.1,
+                location: "1984 Mathematics Road",
+                hours: "7am - 10pm",
+                reviews: [
+                    { user: "Isaac", rating: 4, comment: "Perfect for math and CS students. Lots of whiteboards!" },
+                    { user: "Lily", rating: 4, comment: "Quiet floors are great for problem sets." }
+                ]
+            },
+            {
+                id: 12,
+                name: "MacLeod Building",
+                lat: 49.26120,
+                lng: -123.24970,
+                seats: 60,
+                noise: "Quiet",
+                outlets: false,
+                rating: 3.9,
+                location: "2356 Main Mall",
+                hours: "8am - 9pm",
+                reviews: [
+                    { user: "Ben", rating: 4, comment: "Nice and quiet but limited outlets. Bring a power bank!" }
+                ]
+            },
+            {
+                id: 13,
+                name: "Allard Hall (Law Library)",
+                lat: 49.26870,
+                lng: -123.25270,
+                seats: 180,
+                noise: "Very Quiet",
+                outlets: true,
+                rating: 4.7,
+                location: "1822 East Mall",
+                hours: "7am - 12am",
+                reviews: [
+                    { user: "Victoria", rating: 5, comment: "Beautiful library with a serious study atmosphere." },
+                    { user: "James", rating: 4, comment: "Even non-law students love studying here!" }
+                ]
+            },
+            {
+                id: 14,
+                name: "CIRS Building",
+                lat: 49.26100,
+                lng: -123.24950,
+                seats: 70,
+                noise: "Quiet",
+                outlets: true,
+                rating: 4.5,
+                location: "2260 West Mall",
+                hours: "7am - 10pm",
+                reviews: [
+                    { user: "Grace", rating: 5, comment: "Sustainable building with great natural lighting!" },
+                    { user: "Tyler", rating: 4, comment: "Modern and eco-friendly. Nice atmosphere." }
+                ]
+            },
+            {
+                id: 15,
+                name: "Ponderosa Commons Oak House",
+                lat: 49.26180,
+                lng: -123.25130,
+                seats: 120,
+                noise: "Moderate",
+                outlets: true,
+                rating: 4.3,
+                location: "2075 West Mall",
+                hours: "24/7",
+                reviews: [
+                    { user: "Hannah", rating: 4, comment: "Great for residence students. Open all night!" },
+                    { user: "Liam", rating: 4, comment: "Convenient and comfortable. Can get chatty sometimes." }
+                ]
+            }
+        ];
+
+        let map;
+        let selectedMarker = null;
+        let selectedSpot = null;
+        let markers = [];
+        let currentRating = 5;
+
+        const UBC_CENTER = { lat: 49.2606, lng: -123.2460 };
+
+        // Initialize map
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: UBC_CENTER,
+                zoom: 15,
+                styles: [
+                    {
+                        featureType: "poi",
+                        elementType: "labels",
+                        stylers: [{ visibility: "off" }]
+                    }
+                ]
+            });
+
+            // Create markers
+            studySpots.forEach(spot => {
+                createMarker(spot);
+            });
+
+            setupEventListeners();
+        }
+
+        function createMarker(spot) {
+            const marker = new google.maps.Marker({
+                map: map,
+                position: { lat: spot.lat, lng: spot.lng },
+                title: spot.name,
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 10,
+                    fillColor: "#9b7dd4",
+                    fillOpacity: 1,
+                    strokeColor: "#ffffff",
+                    strokeWeight: 2
+                }
+            });
+
+            markers.push({ marker, spot });
+
+            marker.addListener('click', () => {
+                selectSpot(marker, spot);
+            });
+        }
+
+        function selectSpot(marker, spot) {
+            // Reset previous selection
+            if (selectedMarker) {
+                selectedMarker.setIcon({
+                    path: google.maps.SymbolPath.CIRCLE,
+                    scale: 10,
+                    fillColor: "#9b7dd4",
+                    fillOpacity: 1,
+                    strokeColor: "#ffffff",
+                    strokeWeight: 2
+                });
+            }
+
+            // Highlight selected marker
+            marker.setIcon({
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 12,
+                fillColor: "#7c5fc2",
+                fillOpacity: 1,
+                strokeColor: "#ffffff",
+                strokeWeight: 3
+            });
+
+            selectedMarker = marker;
+            selectedSpot = spot;
+
+            displaySpotDetails(spot);
+        }
+
+        function displaySpotDetails(spot) {
+            document.getElementById('placeholder').style.display = 'none';
+            document.getElementById('details').style.display = 'block';
+            document.getElementById('review-form').style.display = 'none';
+            document.getElementById('add-review-btn').style.display = 'block';
+
+            document.getElementById('spot-name').textContent = spot.name;
+            document.getElementById('spot-rating').innerHTML = '⭐'.repeat(Math.round(spot.rating)) + ' ' + spot.rating;
+            document.getElementById('spot-seats').textContent = spot.seats;
+            document.getElementById('spot-noise').textContent = spot.noise;
+            document.getElementById('spot-outlets').textContent = spot.outlets ? 'Yes' : 'No';
+            document.getElementById('spot-outlet-icon').textContent = spot.outlets ? '🔌' : '❌';
+            document.getElementById('spot-location').textContent = spot.location;
+            document.getElementById('spot-hours').textContent = spot.hours;
+
+            document.getElementById('review-count').textContent = spot.reviews.length;
+            const reviewsList = document.getElementById('reviews-list');
+            reviewsList.innerHTML = '';
+
+            if (spot.reviews.length === 0) {
+                reviewsList.innerHTML = '<p style="color: #999;">No reviews yet. Be the first to review!</p>';
+            } else {
+                spot.reviews.forEach(review => {
+                    const reviewDiv = document.createElement('div');
+                    reviewDiv.className = 'review';
+                    reviewDiv.innerHTML = `
+                        <div class="review-header">
+                            <span class="review-user">${review.user}</span>
+                            <span class="review-rating">${'⭐'.repeat(review.rating)}</span>
+                        </div>
+                        <p class="review-comment">${review.comment}</p>
+                    `;
+                    reviewsList.appendChild(reviewDiv);
+                });
+            }
+        }
+
+        function setupEventListeners() {
+            document.getElementById('add-review-btn').onclick = () => {
+                document.getElementById('add-review-btn').style.display = 'none';
+                document.getElementById('review-form').style.display = 'block';
+            };
+
+            document.getElementById('cancel-review').onclick = () => {
+                document.getElementById('review-form').style.display = 'none';
+                document.getElementById('add-review-btn').style.display = 'block';
+            };
+
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                star.onclick = () => {
+                    currentRating = parseInt(star.dataset.rating);
+                    updateStars();
+                };
+            });
+
+            document.getElementById('submit-review').onclick = submitReview;
+        }
+
+        function updateStars() {
+            const stars = document.querySelectorAll('.star');
+            stars.forEach(star => {
+                if (parseInt(star.dataset.rating) <= currentRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        function submitReview() {
+            const comment = document.getElementById('review-comment').value;
+            if (!comment) {
+                alert('Please write a review!');
+                return;
+            }
+
+            selectedSpot.reviews.push({
+                user: 'You',
+                rating: currentRating,
+                comment: comment
+            });
+
+            displaySpotDetails(selectedSpot);
+            document.getElementById('review-comment').value = '';
+            currentRating = 5;
+            updateStars();
+        }
+
+        // Initialize stars
+        updateStars();
+
+        // Load Google Maps
+        const API_KEY = 'AIzaSyBHplBjzNh6sM6Umtx4bgYJinjHHIaUR28';
+        const script = document.createElement('script');
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=initMap`;
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+    </script>
 </body>
 </html>
