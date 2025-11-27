@@ -31,4 +31,4 @@ We built it with HTML, CSS and JavaScript (to be added soon)
 - Real-time occupancy indicators
 - Expand to include other campus resources (food spots, quiet zones, study groups)
 
-Built with ❤️ by Legally Brunettes for the Vibe Coding Hackathon organized by WiCS club at UBC
+Built with ❤️ by Sarah, Kaitlyn, Wakana & Sabrina for the Vibe Coding Hackathon organized by WiCS club at UBC
