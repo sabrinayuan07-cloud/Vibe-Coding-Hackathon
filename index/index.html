@@ -3,9 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>UBC Study Spot Finder</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
+    <header>
+        <h1>🎓 UBC Study Spot Finder</h1>
+        <p>Find your perfect study space on campus</p>
+    </header>
+
+    <div class="container">
+        <!-- MAP SECTION -->
+        <div class="map-container">
+            <h2>Campus Map</h2>
+            <div id="map" class="map">
+                <!-- Pins will be added here by JavaScript -->
+            </div>
+        </div>
+
+        <!-- DETAILS SECTION -->
+        <div class="details-container">
+            <div id="placeholder" class="placeholder">
+                <h2>👈 Click a pin to view details</h2>
+            </div>
+            
+            <div id="details" class="details" style="display: none;">
+                <h2 id="spot-name"></h2>
+                <div id="spot-rating" class="rating"></div>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <span class="icon">💺</span>
+                        <div>
+                            <strong id="spot-seats"></strong>
+                            <p>Seats</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <span class="icon">🔊</span>
+                        <div>
+                            <strong id="spot-noise"></strong>
+                            <p>Noise Level</p>
+                        </div>
+                    </div>
+                    
+                    <div class="info-card">
+                        <span class="icon" id="spot-outlet-icon">🔌</span>
+                        <div>
+                            <strong id="spot-outlets"></strong>
+                            <p>Outlets</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- REVIEWS SECTION -->
+                <div class="reviews">
+                    <h3>Reviews (<span id="review-count">0</span>)</h3>
+                    <div id="reviews-list"></div>
+                </div>
+
+                <!-- ADD REVIEW BUTTON -->
+                <button id="add-review-btn" class="add-review-btn">
+                    ➕ Add Review
+                </button>
+
+                <!-- REVIEW FORM (hidden by default) -->
+                <div id="review-form" class="review-form" style="display: none;">
+                    <h3>Write a Review</h3>
+                    <div>
+                        <label>Rating:</label>
+                        <div class="star-selector" id="star-selector">
+                            <span data-rating="1">⭐</span>
+                            <span data-rating="2">⭐</span>
+                            <span data-rating="3">⭐</span>
+                            <span data-rating="4">⭐</span>
+                            <span data-rating="5">⭐</span>
+                        </div>
+                    </div>
+                    <textarea id="review-comment" placeholder="Share your experience..." rows="4"></textarea>
+                    <div class="form-buttons">
+                        <button id="submit-review">Submit</button>
+                        <button id="cancel-review">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
